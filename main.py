@@ -26,6 +26,8 @@ from utils.render import get_depths_image, cget_depths_image, cpncc
 from utils.paf import gen_img_paf
 import argparse
 import torch.backends.cudnn as cudnn
+from tqdm import tqdm
+import os
 
 STD_SIZE = 120
 
@@ -58,7 +60,10 @@ def main(args):
     # 3. forward
     tri = sio.loadmat('visualize/tri.mat')['tri']
     transform = transforms.Compose([ToTensorGjz(), NormalizeGjz(mean=127.5, std=128)])
-    for img_fp in args.files:
+    path, dirs, files = os.walk(args.files[0]).__next__()
+    destination_folder = "/content/3ddfa_images/"
+    for f in tqdm(files):
+        img_fp = path+f
         img_ori = cv2.imread(img_fp)
         if args.dlib_bbox:
             rects = face_detector(img_ori, 1)
@@ -66,6 +71,7 @@ def main(args):
             rects = []
 
         if len(rects) == 0:
+            continue
             rects = dlib.rectangles()
             rect_fp = img_fp + '.bbox'
             lines = open(rect_fp).read().strip().split('\n')[1:]
@@ -126,6 +132,7 @@ def main(args):
             poses.append(pose)
 
             # dense face 3d vertices
+            
             if args.dump_ply or args.dump_vertex or args.dump_depth or args.dump_pncc or args.dump_obj:
                 vertices = predict_dense(param, roi_box)
                 vertices_lst.append(vertices)
@@ -134,7 +141,7 @@ def main(args):
             if args.dump_vertex:
                 dump_vertex(vertices, '{}_{}.mat'.format(img_fp.replace(suffix, ''), ind))
             if args.dump_pts:
-                wfp = '{}_{}.txt'.format(img_fp.replace(suffix, ''), ind)
+                wfp = destination_folder +"landmarks/" +'{}.txt'.format(img_fp.split("/")[3][:-4])
                 np.savetxt(wfp, pts68, fmt='%.3f')
                 print('Save 68 3d landmarks to {}'.format(wfp))
             if args.dump_roi_box:
@@ -174,7 +181,8 @@ def main(args):
             cv2.imwrite(wfp, pncc_feature[:, :, ::-1])  # cv2.imwrite will swap RGB -> BGR
             print('Dump to {}'.format(wfp))
         if args.dump_res:
-            draw_landmarks(img_ori, pts_res, wfp=img_fp.replace(suffix, '_3DDFA.jpg'), show_flg=args.show_flg)
+            wfp = destination_folder +'{}'.format(img_fp.split("/")[3]) 
+            draw_landmarks(img_ori, pts_res, wfp=wfp, show_flg=args.show_flg)
 
 
 if __name__ == '__main__':
@@ -188,18 +196,19 @@ if __name__ == '__main__':
     parser.add_argument('--dump_res', default='true', type=str2bool, help='whether write out the visualization image')
     parser.add_argument('--dump_vertex', default='false', type=str2bool,
                         help='whether write out the dense face vertices to mat')
-    parser.add_argument('--dump_ply', default='true', type=str2bool)
+    parser.add_argument('--dump_ply', default='false', type=str2bool)
     parser.add_argument('--dump_pts', default='true', type=str2bool)
     parser.add_argument('--dump_roi_box', default='false', type=str2bool)
-    parser.add_argument('--dump_pose', default='true', type=str2bool)
-    parser.add_argument('--dump_depth', default='true', type=str2bool)
-    parser.add_argument('--dump_pncc', default='true', type=str2bool)
+    parser.add_argument('--dump_pose', default='false', type=str2bool)
+    parser.add_argument('--dump_depth', default='false', type=str2bool)
+    parser.add_argument('--dump_pncc', default='false', type=str2bool)
     parser.add_argument('--dump_paf', default='false', type=str2bool)
     parser.add_argument('--paf_size', default=3, type=int, help='PAF feature kernel size')
-    parser.add_argument('--dump_obj', default='true', type=str2bool)
+    parser.add_argument('--dump_obj', default='false', type=str2bool)
     parser.add_argument('--dlib_bbox', default='true', type=str2bool, help='whether use dlib to predict bbox')
-    parser.add_argument('--dlib_landmark', default='true', type=str2bool,
+    parser.add_argument('--dlib_landmark', default='false', type=str2bool,
                         help='whether use dlib landmark to crop image')
 
     args = parser.parse_args()
     main(args)
+
