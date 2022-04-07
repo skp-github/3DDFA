@@ -117,7 +117,7 @@ In addition, I strongly recommend using Python3.6+ instead of older version for 
 
 2. Build cython module (just one line for building)
    ```
-   cd utils/cython
+   cd utils_3ddfa/cython
    python3 setup.py build_ext -i
    ```
    This is for accelerating depth estimation and PNCC render since Python is too slow in for loop.

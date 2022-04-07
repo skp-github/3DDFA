@@ -2,8 +2,8 @@
 # coding: utf-8
 
 from benchmark import extract_param
-from utils.ddfa import reconstruct_vertex
-from utils.io import _dump, _load
+from utils_3ddfa.ddfa import reconstruct_vertex
+from utils_3ddfa.io import _dump, _load
 import os.path as osp
 from skimage import io
 import matplotlib.pyplot as plt

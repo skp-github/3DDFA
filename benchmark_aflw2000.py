@@ -11,7 +11,7 @@ There is no obvious difference between these two splits.
 import os.path as osp
 import numpy as np
 from math import sqrt
-from utils.io import _load
+from utils_3ddfa.io import _load
 
 d = 'test.configs'
 

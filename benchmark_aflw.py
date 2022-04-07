@@ -4,7 +4,7 @@
 import os.path as osp
 import numpy as np
 from math import sqrt
-from utils.io import _load
+from utils_3ddfa.io import _load
 
 d = 'test.configs'
 yaw_list = _load(osp.join(d, 'AFLW_GT_crop_yaws.npy'))

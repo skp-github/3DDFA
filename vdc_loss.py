@@ -3,8 +3,8 @@
 
 import torch
 import torch.nn as nn
-from utils.io import _load, _numpy_to_cuda, _numpy_to_tensor
-from utils.params import *
+from utils_3ddfa.io import _load, _numpy_to_cuda, _numpy_to_tensor
+from utils_3ddfa.params import *
 
 _to_tensor = _numpy_to_cuda  # gpu
 

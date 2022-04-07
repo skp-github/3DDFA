@@ -6,17 +6,17 @@ import mobilenet_v1
 import numpy as np
 import cv2
 import dlib
-from utils.ddfa import ToTensorGjz, NormalizeGjz
+from utils_3ddfa.ddfa import ToTensorGjz, NormalizeGjz
 import scipy.io as sio
-from utils.inference import (
+from utils_3ddfa.inference import (
     parse_roi_box_from_landmark,
     crop_img,
     predict_68pts,
     predict_dense,
 )
-from utils.cv_plot import plot_kpt
-from utils.render import get_depths_image, cget_depths_image, cpncc
-from utils.paf import gen_img_paf
+from utils_3ddfa.cv_plot import plot_kpt
+from utils_3ddfa.render import get_depths_image, cget_depths_image, cpncc
+from utils_3ddfa.paf import gen_img_paf
 import argparse
 import torch.backends.cudnn as cudnn
 

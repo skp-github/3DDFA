@@ -8,7 +8,7 @@ import os
 import os.path as osp
 from glob import glob
 
-from utils.lighting import RenderPipeline
+from utils_3ddfa.lighting import RenderPipeline
 import numpy as np
 import scipy.io as sio
 import imageio
